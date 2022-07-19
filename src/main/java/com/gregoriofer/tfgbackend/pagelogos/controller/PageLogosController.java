@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -52,6 +54,35 @@ public class PageLogosController {
         } catch (Exception e) {
             e.printStackTrace();
             response = new ResponseEntity<ArrayList<PageLogos>>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+        }
+
+        return response;
+    }
+
+    @GetMapping("/logo-page")
+    public ResponseEntity<PageLogos> getLogoByPage(@RequestHeader Map<String, String> headers,
+            @RequestParam String page) {
+        String apiKey = getApiKey(headers);
+        Mono<JSONArray> monoResponse = client.get()
+                .uri(uriBuilder -> uriBuilder.queryParam("page", "eq." + page).build())
+                .header(HEADER_API, apiKey)
+                .exchangeToMono(response -> {
+                    if (response.statusCode().equals(HttpStatus.OK)) {
+                        return response.bodyToMono(JSONArray.class);
+                    } else {
+                        return Mono.just(null);
+                    }
+                });
+
+        ResponseEntity<PageLogos> response;
+        ArrayList<PageLogos> pageLogosList = new ArrayList<>();
+        try {
+            JSONArray responseBody = monoResponse.block();
+            pageLogosList = JSONTransformer.toPageLogosList(responseBody);
+            response = new ResponseEntity<PageLogos>(pageLogosList.get(0), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = new ResponseEntity<PageLogos>(new PageLogos(), HttpStatus.UNAUTHORIZED);
         }
 
         return response;

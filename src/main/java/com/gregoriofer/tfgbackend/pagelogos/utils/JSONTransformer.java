@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.gregoriofer.tfgbackend.pagelogos.model.PageLogos;
 
@@ -20,7 +19,7 @@ public class JSONTransformer {
         return pageLogosList;
     }
 
-    private static PageLogos toPageLogo(LinkedHashMap json) {
+    public static PageLogos toPageLogo(LinkedHashMap json) {
         PageLogos pageLogos = new PageLogos();
 
         pageLogos.setId(json.get(Constants.ID) != null ? Integer.parseInt(json.get(Constants.ID).toString()) : -1);
