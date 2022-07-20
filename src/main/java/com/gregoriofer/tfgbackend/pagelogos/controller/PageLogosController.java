@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -55,10 +54,38 @@ public class PageLogosController {
             e.printStackTrace();
             response = new ResponseEntity<ArrayList<PageLogos>>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
         }
-
+        
         return response;
     }
 
+    @GetMapping("logos-without-page")
+    public ResponseEntity<ArrayList<PageLogos>> getLogosWithout(@RequestHeader Map<String, String> headers, @RequestParam String page) {
+        String apiKey = getApiKey(headers);
+        Mono<JSONArray> monoResponse = client.get()
+                .uri(uriBuilder -> uriBuilder.queryParam("page", "not.eq." + page).build())
+                .header(HEADER_API, apiKey)
+                .exchangeToMono(response -> {
+                    if (response.statusCode().equals(HttpStatus.OK)) {
+                        return response.bodyToMono(JSONArray.class);
+                    } else {
+                        return Mono.just(null);
+                    }
+                });
+
+        ResponseEntity<ArrayList<PageLogos>> response;
+        ArrayList<PageLogos> pageLogosList = new ArrayList<>();
+        try {
+            JSONArray responseBody = monoResponse.block();
+            pageLogosList = JSONTransformer.toPageLogosList(responseBody);
+            response = new ResponseEntity<ArrayList<PageLogos>>(pageLogosList, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = new ResponseEntity<ArrayList<PageLogos>>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+        }
+
+        return response;
+    }
+    
     @GetMapping("/logo-page")
     public ResponseEntity<PageLogos> getLogoByPage(@RequestHeader Map<String, String> headers,
             @RequestParam String page) {
@@ -87,4 +114,5 @@ public class PageLogosController {
 
         return response;
     }
+
 }

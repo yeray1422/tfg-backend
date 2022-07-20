@@ -4,6 +4,7 @@ public class PageLogos {
 
     private Integer id;
     private String page;
+    private String title;
     private String logo;
     private String description;
 
@@ -21,6 +22,14 @@ public class PageLogos {
 
     public void setPage(String page) {
         this.page = page;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getLogo() {
