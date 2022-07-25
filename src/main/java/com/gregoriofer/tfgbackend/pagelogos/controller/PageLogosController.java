@@ -32,17 +32,34 @@ public class PageLogosController {
     }
 
     @GetMapping("/logos")
-    public ResponseEntity<ArrayList<PageLogos>> getLogos(@RequestHeader Map<String, String> headers) {
+    public ResponseEntity<ArrayList<PageLogos>> getLogos(@RequestHeader Map<String, String> headers,
+            @RequestParam(required = false) String page) {
         String apiKey = getApiKey(headers);
-        Mono<JSONArray> monoResponse = client.get()
-                .header(HEADER_API, apiKey)
-                .exchangeToMono((response) -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(JSONArray.class);
-                    } else {
-                        return Mono.just(null);
-                    }
-                });
+        Mono<JSONArray> monoResponse;
+        if (page != null) {
+            monoResponse = client.get()
+                    .uri(uriBuilder -> uriBuilder.queryParam("page", page).build())
+                    .header(HEADER_API, apiKey)
+                    .exchangeToMono(response -> {
+                        if (response.statusCode().equals(HttpStatus.OK)) {
+                            return response.bodyToMono(JSONArray.class);
+                        } else {
+                            return Mono.just(null);
+                        }
+                    });
+        } else {
+            monoResponse = client.get()
+                    .header(HEADER_API, apiKey)
+                    .exchangeToMono(response -> {
+                        if (response.statusCode().equals(HttpStatus.OK)) {
+                            return response.bodyToMono(JSONArray.class);
+                        } else {
+                            return Mono.just(null);
+                        }
+                    });
+        }
+
+
 
         ResponseEntity<ArrayList<PageLogos>> response;
         ArrayList<PageLogos> pageLogosList = new ArrayList<>();
@@ -51,65 +68,7 @@ public class PageLogosController {
             pageLogosList = JSONTransformer.toPageLogosList(responseBody);
             response = new ResponseEntity<ArrayList<PageLogos>>(pageLogosList, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
-            response = new ResponseEntity<ArrayList<PageLogos>>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
-        }
-        
-        return response;
-    }
-
-    @GetMapping("logos-without-page")
-    public ResponseEntity<ArrayList<PageLogos>> getLogosWithout(@RequestHeader Map<String, String> headers, @RequestParam String page) {
-        String apiKey = getApiKey(headers);
-        Mono<JSONArray> monoResponse = client.get()
-                .uri(uriBuilder -> uriBuilder.queryParam("page", "not.eq." + page).build())
-                .header(HEADER_API, apiKey)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(JSONArray.class);
-                    } else {
-                        return Mono.just(null);
-                    }
-                });
-
-        ResponseEntity<ArrayList<PageLogos>> response;
-        ArrayList<PageLogos> pageLogosList = new ArrayList<>();
-        try {
-            JSONArray responseBody = monoResponse.block();
-            pageLogosList = JSONTransformer.toPageLogosList(responseBody);
-            response = new ResponseEntity<ArrayList<PageLogos>>(pageLogosList, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response = new ResponseEntity<ArrayList<PageLogos>>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
-        }
-
-        return response;
-    }
-    
-    @GetMapping("/logo-page")
-    public ResponseEntity<PageLogos> getLogoByPage(@RequestHeader Map<String, String> headers,
-            @RequestParam String page) {
-        String apiKey = getApiKey(headers);
-        Mono<JSONArray> monoResponse = client.get()
-                .uri(uriBuilder -> uriBuilder.queryParam("page", "eq." + page).build())
-                .header(HEADER_API, apiKey)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(JSONArray.class);
-                    } else {
-                        return Mono.just(null);
-                    }
-                });
-
-        ResponseEntity<PageLogos> response;
-        ArrayList<PageLogos> pageLogosList = new ArrayList<>();
-        try {
-            JSONArray responseBody = monoResponse.block();
-            pageLogosList = JSONTransformer.toPageLogosList(responseBody);
-            response = new ResponseEntity<PageLogos>(pageLogosList.get(0), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response = new ResponseEntity<PageLogos>(new PageLogos(), HttpStatus.UNAUTHORIZED);
+            response = new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
         }
 
         return response;
