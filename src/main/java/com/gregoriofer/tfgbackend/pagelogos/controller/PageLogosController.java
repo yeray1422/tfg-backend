@@ -2,8 +2,9 @@ package com.gregoriofer.tfgbackend.pagelogos.controller;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.json.simple.JSONArray;
+// import org.json.simple.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.gregoriofer.tfgbackend.pagelogos.model.PageLogos;
-import com.gregoriofer.tfgbackend.pagelogos.utils.JSONTransformer;
 
 import reactor.core.publisher.Mono;
 
@@ -32,17 +32,16 @@ public class PageLogosController {
     }
 
     @GetMapping("/logos")
-    public ResponseEntity<ArrayList<PageLogos>> getLogos(@RequestHeader Map<String, String> headers,
-            @RequestParam(required = false) String page) {
+    public ResponseEntity<ArrayList<PageLogos>> getLogos(@RequestHeader Map<String, String> headers, @RequestParam(required = false) String page) {
         String apiKey = getApiKey(headers);
-        Mono<JSONArray> monoResponse;
+        Mono<PageLogos[]> monoResponse;
         if (page != null) {
             monoResponse = client.get()
                     .uri(uriBuilder -> uriBuilder.queryParam("page", page).build())
                     .header(HEADER_API, apiKey)
                     .exchangeToMono(response -> {
                         if (response.statusCode().equals(HttpStatus.OK)) {
-                            return response.bodyToMono(JSONArray.class);
+                            return response.bodyToMono(PageLogos[].class);
                         } else {
                             return Mono.just(null);
                         }
@@ -52,25 +51,25 @@ public class PageLogosController {
                     .header(HEADER_API, apiKey)
                     .exchangeToMono(response -> {
                         if (response.statusCode().equals(HttpStatus.OK)) {
-                            return response.bodyToMono(JSONArray.class);
+                            return response.bodyToMono(PageLogos[].class);
                         } else {
                             return Mono.just(null);
                         }
                     });
         }
 
-
-
         ResponseEntity<ArrayList<PageLogos>> response;
         ArrayList<PageLogos> pageLogosList = new ArrayList<>();
         try {
-            JSONArray responseBody = monoResponse.block();
-            pageLogosList = JSONTransformer.toPageLogosList(responseBody);
-            response = new ResponseEntity<ArrayList<PageLogos>>(pageLogosList, HttpStatus.OK);
+            PageLogos[] pageLogosArray = monoResponse.block();
+            for (PageLogos pageLogos : pageLogosArray) {
+                pageLogosList.add(pageLogos);
+            }
+            response = new ResponseEntity<ArrayList<PageLogos>>((ArrayList<PageLogos>) pageLogosList.stream().collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
         }
-
+        
         return response;
     }
 
