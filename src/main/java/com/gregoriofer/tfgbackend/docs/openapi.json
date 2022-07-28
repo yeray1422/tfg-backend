@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tfg Backend",
+    "description": "Tfg Backend API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/logos": {
+      "description": "Logos pages resources",
+      "get": {
+        "description": "Operation to fetch logos of the pages",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "apikey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "description": "GET a specific page => \"eq.{pagename}\".</br> GET all excluding 1 page => \"not.eq.{pagename}\".</br> GET all => empty",
+            "schema": {
+              "type": "string",
+              "example": "eq.home"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pagelogos"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "example": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "pagelogos": {
+        "type": "array",
+        "items": {
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 3
+            },
+            "page": {
+              "type": "string",
+              "example": "black-ops-2"
+            },
+            "title": {
+              "type": "string",
+              "example": "Black Ops 2"
+            },
+            "logo": {
+              "type": "string",
+              "example": "https://picsum.photos/200/300"
+            },
+            "description": {
+              "type": "string",
+              "example": "En este Call of Duty se encuentran los Easter Eggs de Tranzit, Mob of the Dead, Origins, Buried y Die Rise."
+            }
+          }
+        }
+      }
+    }
+  }
+}
