@@ -6,6 +6,7 @@ public class HomeCards {
     private String title;
     private String image;
     private String description;
+    private String page;
 
     public Integer getId() {
         return id;
@@ -37,6 +38,14 @@ public class HomeCards {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
     }
 
 }

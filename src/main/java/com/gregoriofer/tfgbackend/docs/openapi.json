@@ -28,7 +28,7 @@
             "in": "query",
             "name": "page",
             "required": false,
-            "description": "GET a specific page => \"eq.{pagename}\".</br> GET all excluding 1 page => \"not.eq.{pagename}\".</br> GET all => empty",
+            "description": "GET a specific page => \"eq.{pagename}\".</br> GET all => empty",
             "schema": {
               "type": "string",
               "example": "eq.home"
@@ -42,6 +42,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/pagelogos"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "example": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/home-cards": {
+      "description": "Home cards resources",
+      "get": {
+        "description": "Operation to fetch home cards",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "apikey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/home-cards"
                 }
               }
             }
@@ -88,6 +129,33 @@
             "description": {
               "type": "string",
               "example": "En este Call of Duty se encuentran los Easter Eggs de Tranzit, Mob of the Dead, Origins, Buried y Die Rise."
+            }
+          }
+        }
+      },
+      "home-cards": {
+        "type": "array",
+        "items": {
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "Black Ops"
+            },
+            "image": {
+              "type": "string",
+              "example": "https://picsum.photos/200/300"
+            },
+            "description": {
+              "type": "string",
+              "example": "Aquí encontrarás los Easter Eggs de Ascension, Call of the Dead, Sangri-la y Moon."
+            },
+            "page": {
+              "type": "string",
+              "example": "black-ops"
             }
           }
         }

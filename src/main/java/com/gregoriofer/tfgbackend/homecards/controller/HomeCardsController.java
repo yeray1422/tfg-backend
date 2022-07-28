@@ -49,7 +49,6 @@ public class HomeCardsController {
         ArrayList<HomeCards> homeCardsList = new ArrayList<>();
         try {
             HomeCards[] homeCardsArray = monoResponse.block();
-            System.out.println(Arrays.toString(homeCardsArray));
             for (HomeCards homeCards : homeCardsArray) {
                 homeCardsList.add(homeCards);
             }
