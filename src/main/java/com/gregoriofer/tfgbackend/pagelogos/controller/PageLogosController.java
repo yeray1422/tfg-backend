@@ -1,6 +1,7 @@
 package com.gregoriofer.tfgbackend.pagelogos.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.gregoriofer.tfgbackend.pagelogos.model.PageLogos;
+import com.gregoriofer.tfgbackend.pagelogos.model.SortById;
 
 import reactor.core.publisher.Mono;
 
@@ -64,6 +66,7 @@ public class PageLogosController {
             for (PageLogos pageLogos : pageLogosArray) {
                 pageLogosList.add(pageLogos);
             }
+            Collections.sort(pageLogosList, new SortById());
             response = new ResponseEntity<ArrayList<PageLogos>>((ArrayList<PageLogos>) pageLogosList.stream().collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
