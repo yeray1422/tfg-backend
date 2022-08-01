@@ -43,16 +43,12 @@ public class PageLogosController {
         return apiKey;
     }
 
-    @Operation(description = "Operation to fetch logos of the pages")
+    @Operation(description = "Operation to fetch logos of the pages", method = "get", tags = {"Page Logos"})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PageLogos.class)))),
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PageLogos.class))))})
-    @Parameters(value = {
-        @Parameter(in = ParameterIn.HEADER, name = "apikey", required = true),
-        @Parameter(in = ParameterIn.QUERY, name = "page", required = false, description = "GET a specific page => 'eq.{pagename}'.</br> GET all => empty")
-    })
     @GetMapping("/logos")
-    public ResponseEntity<ArrayList<PageLogos>> getLogos(@RequestHeader Map<String, String> headers, @RequestParam(required = false) String page) {
+    public ResponseEntity<ArrayList<PageLogos>> getLogos(@Parameter(in = ParameterIn.HEADER, name = "apikey", required = true) @RequestHeader Map<String, String> headers, @Parameter(in = ParameterIn.QUERY, description = "GET a specific page => 'eq.{pagename}'.</br> GET all => empty", example = "") @RequestParam(required = false) String page) {
         String apiKey = getApiKey(headers);
         Mono<PageLogos[]> monoResponse;
         if (page != null) {
