@@ -17,10 +17,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.gregoriofer.tfgbackend.pagelogos.model.PageLogos;
 import com.gregoriofer.tfgbackend.pagelogos.model.SortById;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 
 @CrossOrigin
 @RestController
+@Tag(name = "Page Logos", description = "Page Logos API")
 public class PageLogosController {
 
     private WebClient client = WebClient.create("https://ojemuehslwnravrhjgbk.supabase.co/rest/v1/page-logos");
@@ -32,8 +42,12 @@ public class PageLogosController {
         return apiKey;
     }
 
+    @Operation(description = "Operation to fetch logos of the pages", method = "get", tags = {"Page Logos"})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PageLogos.class)))),
+        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PageLogos.class))))})
     @GetMapping("/logos")
-    public ResponseEntity<ArrayList<PageLogos>> getLogos(@RequestHeader Map<String, String> headers, @RequestParam(required = false) String page) {
+    public ResponseEntity<ArrayList<PageLogos>> getLogos(@Parameter(in = ParameterIn.HEADER, name = "apikey", required = true) @RequestHeader Map<String, String> headers, @Parameter(in = ParameterIn.QUERY, description = "GET a specific page => 'eq.{pagename}'.</br> GET all => empty", example = "") @RequestParam(required = false) String page) {
         String apiKey = getApiKey(headers);
         Mono<PageLogos[]> monoResponse;
         if (page != null) {
