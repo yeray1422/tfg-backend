@@ -1,7 +1,6 @@
 package com.gregoriofer.tfgbackend.homecards.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
