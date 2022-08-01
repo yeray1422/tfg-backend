@@ -16,10 +16,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.gregoriofer.tfgbackend.homecards.model.HomeCards;
 import com.gregoriofer.tfgbackend.homecards.model.SortById;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 
 @CrossOrigin
 @RestController
+@Tag(name = "Home Cards", description = "Home Cards API")
 public class HomeCardsController {
     
     private WebClient client = WebClient.create("https://ojemuehslwnravrhjgbk.supabase.co/rest/v1/home-cards");
@@ -31,6 +41,12 @@ public class HomeCardsController {
         return apiKey;
     }
 
+    @Operation(description = "Operation to fetch home cards")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = HomeCards.class)))),
+        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = HomeCards.class))))
+    })
+    @Parameter(in = ParameterIn.HEADER, name = "apikey", required = true)
     @GetMapping("/home-cards")
     public ResponseEntity<ArrayList<HomeCards>> getHomeCards(@RequestHeader Map<String, String> headers) {
         String apiKey = getApiKey(headers);
