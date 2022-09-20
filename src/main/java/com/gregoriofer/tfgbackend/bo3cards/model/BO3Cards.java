@@ -5,6 +5,7 @@ public class BO3Cards {
   private Integer id;
   private String title;
   private String image;
+  private String page;
 
   public Integer getId() {
     return id;
@@ -28,5 +29,13 @@ public class BO3Cards {
 
   public void setImage(String image) {
     this.image = image;
+  }
+
+  public String getPage() {
+    return page;
+  }
+
+  public void setPage(String page) {
+    this.page = page;
   }
 }
