@@ -10,4 +10,6 @@ public class TfgBackendApplication {
 		SpringApplication.run(TfgBackendApplication.class, args);
 	}
 
+	// http://localhost:8080/swagger-ui/index.html
+
 }
