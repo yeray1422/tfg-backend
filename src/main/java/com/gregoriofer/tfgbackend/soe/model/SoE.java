@@ -5,7 +5,7 @@ public class SoE {
   private Integer id;
   private String name;
   private String partNumber;
-  private String locationImage;
+  private String[] locationImages;
 
   public Integer getId() {
     return id;
@@ -31,11 +31,11 @@ public class SoE {
     this.partNumber = partNumber;
   }
 
-  public String getLocationImage() {
-    return locationImage;
+  public String[] getlocationImages() {
+    return locationImages;
   }
 
-  public void setLocationImage(String locationImage) {
-    this.locationImage = locationImage;
+  public void setlocationImages(String[] locationImages) {
+    this.locationImages = locationImages;
   }
 }
