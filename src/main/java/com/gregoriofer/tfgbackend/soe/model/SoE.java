@@ -1,11 +1,12 @@
 package com.gregoriofer.tfgbackend.soe.model;
 
+import java.util.Map;
+
 public class SoE {
 
   private Integer id;
   private String name;
-  private String partNumber;
-  private String[] locationImages;
+  private Map<String, Map<String, String>> parts;
 
   public Integer getId() {
     return id;
@@ -23,19 +24,12 @@ public class SoE {
     this.name = name;
   }
 
-  public String getPartNumber() {
-    return partNumber;
+  public Map<String, Map<String, String>> getParts() {
+    return parts;
   }
 
-  public void setPartNumber(String partNumber) {
-    this.partNumber = partNumber;
+  public void setParts(Map<String, Map<String, String>> parts) {
+    this.parts = parts;
   }
 
-  public String[] getlocationImages() {
-    return locationImages;
-  }
-
-  public void setlocationImages(String[] locationImages) {
-    this.locationImages = locationImages;
-  }
 }

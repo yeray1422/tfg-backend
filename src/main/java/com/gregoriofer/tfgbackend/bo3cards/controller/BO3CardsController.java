@@ -46,7 +46,7 @@ public class BO3CardsController {
     @ApiResponse(responseCode="200", description= "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BO3Cards.class)))),
     @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BO3Cards.class))))
   })
-  @GetMapping("/bo3")
+  @GetMapping("/black-ops-3")
   public ResponseEntity<ArrayList<BO3Cards>> getBO3Cards (@Parameter(in = ParameterIn.HEADER, name = HEADER_API, required = true) @RequestHeader Map <String, String> headers) {
     String apiKey = getApiKey(headers);
     Mono<BO3Cards[]> monoResponse = client.get()
