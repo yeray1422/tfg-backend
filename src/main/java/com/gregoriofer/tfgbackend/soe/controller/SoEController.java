@@ -46,7 +46,7 @@ public class SoEController {
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SoE.class)))),
     @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SoE.class))))
   })
-  @GetMapping("/soe")
+  @GetMapping("/shadows-of-evil")
   public ResponseEntity<ArrayList<SoE>> getSoE (@Parameter(in = ParameterIn.HEADER, name = HEADER_API, required = true) @RequestHeader Map<String, String> headers) {
     String apiKey = getApiKey(headers);
     Mono<SoE[]> monoResponse = client.get()
