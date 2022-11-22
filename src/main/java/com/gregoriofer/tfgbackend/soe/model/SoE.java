@@ -1,5 +1,7 @@
 package com.gregoriofer.tfgbackend.soe.model;
 
+import java.util.Map;
+
 public class SoE {
 
   private Integer id;
@@ -9,6 +11,7 @@ public class SoE {
   private String part;
   private String[] location;
   private String[] description;
+  private Map<String, Map<String, String>> mock;
 
   public Integer getId() {
     return id;
@@ -64,5 +67,13 @@ public class SoE {
 
   public void setDescription(String[] description) {
     this.description = description;
+  }
+
+  public Map<String, Map<String, String>> getMock() {
+    return mock;
+  }
+
+  public void setMock(Map<String, Map<String, String>> mock) {
+    this.mock = mock;
   }
 }
