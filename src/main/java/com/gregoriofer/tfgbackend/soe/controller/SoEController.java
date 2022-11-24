@@ -41,13 +41,14 @@ public class SoEController {
     return apiKey;
   }
 
-  @Operation(description = "Operation to fetch Shadows of Evil stuff", method = "get", tags = {"Shadows of Evil"})
+  @Operation(description = "Operation to fetch Shadows of Evil stuff", method = "get", tags = { "Shadows of Evil" })
   @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SoE.class)))),
-    @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SoE.class))))
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SoE.class)))),
+      @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(array = @ArraySchema(schema = @Schema(implementation = SoE.class))))
   })
   @GetMapping("/shadows-of-evil")
-  public ResponseEntity<ArrayList<SoE>> getSoE (@Parameter(in = ParameterIn.HEADER, name = HEADER_API, required = true) @RequestHeader Map<String, String> headers) {
+  public ResponseEntity<ArrayList<SoE>> getSoE(
+      @Parameter(in = ParameterIn.HEADER, name = HEADER_API, required = true) @RequestHeader Map<String, String> headers) {
     String apiKey = getApiKey(headers);
     Mono<SoE[]> monoResponse = client.get()
         .header(HEADER_API, apiKey)
@@ -67,7 +68,8 @@ public class SoEController {
         soeList.add(soe);
       }
       Collections.sort(soeList, new SortById());
-      response = new ResponseEntity<ArrayList<SoE>>((ArrayList<SoE>) soeList.stream().collect(Collectors.toList()), HttpStatus.OK);
+      response = new ResponseEntity<ArrayList<SoE>>((ArrayList<SoE>) soeList.stream().collect(Collectors.toList()),
+          HttpStatus.OK);
     } catch (Exception e) {
       response = new ResponseEntity<ArrayList<SoE>>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
     }

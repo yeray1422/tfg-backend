@@ -1,17 +1,15 @@
 package com.gregoriofer.tfgbackend.soe.model;
 
-import java.util.Map;
-
 public class SoE {
 
   private Integer id;
   private String type;
   private String emoji;
   private String name;
-  private String part;
-  private String[] location;
-  private String[] description;
-  private Map<String, Map<String, String>> mock;
+  private String usage;
+  private String[] pieces;
+  private String[][] locations;
+  private String[][] descriptions;
 
   public Integer getId() {
     return id;
@@ -45,35 +43,35 @@ public class SoE {
     this.name = name;
   }
 
-  public String getPart() {
-    return part;
+  public String getUsage() {
+    return usage;
   }
 
-  public void setPart(String part) {
-    this.part = part;
+  public void setUsage(String usage) {
+    this.usage = usage;
   }
 
-  public String[] getLocation() {
-    return location;
+  public String[] getPieces() {
+    return pieces;
   }
 
-  public void setLocation(String[] location) {
-    this.location = location;
+  public void setPieces(String[] pieces) {
+    this.pieces = pieces;
   }
 
-  public String[] getDescription() {
-    return description;
+  public String[][] getLocations() {
+    return locations;
   }
 
-  public void setDescription(String[] description) {
-    this.description = description;
+  public void setLocations(String[][] locations) {
+    this.locations = locations;
   }
 
-  public Map<String, Map<String, String>> getMock() {
-    return mock;
+  public String[][] getDescriptions() {
+    return descriptions;
   }
 
-  public void setMock(Map<String, Map<String, String>> mock) {
-    this.mock = mock;
+  public void setDescriptions(String[][] descriptions) {
+    this.descriptions = descriptions;
   }
 }
