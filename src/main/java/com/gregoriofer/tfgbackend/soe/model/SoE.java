@@ -1,5 +1,7 @@
 package com.gregoriofer.tfgbackend.soe.model;
 
+import java.util.Map;
+
 public class SoE {
 
   private Integer id;
@@ -7,9 +9,7 @@ public class SoE {
   private String emoji;
   private String name;
   private String usage;
-  private String[] pieces;
-  private String[][] locations;
-  private String[][] descriptions;
+  private Map<String, Map<String, Map<String, String>>> data;
 
   public Integer getId() {
     return id;
@@ -51,27 +51,11 @@ public class SoE {
     this.usage = usage;
   }
 
-  public String[] getPieces() {
-    return pieces;
+  public Map<String, Map<String, Map<String, String>>> getData() {
+    return data;
   }
 
-  public void setPieces(String[] pieces) {
-    this.pieces = pieces;
-  }
-
-  public String[][] getLocations() {
-    return locations;
-  }
-
-  public void setLocations(String[][] locations) {
-    this.locations = locations;
-  }
-
-  public String[][] getDescriptions() {
-    return descriptions;
-  }
-
-  public void setDescriptions(String[][] descriptions) {
-    this.descriptions = descriptions;
+  public void setData(Map<String, Map<String, Map<String, String>>> data) {
+    this.data = data;
   }
 }
