@@ -19,6 +19,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import reactor.core.publisher.Mono;
 
@@ -37,22 +39,26 @@ public class CommentsController {
   }
 
   @Operation(description = "Operation to insert comments from the users", method = "POST", tags = { "Users Comments" })
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "Inserted correctly")),
+      @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(mediaType = "Something went wrong..."))
+  })
   @PostMapping("/comments")
   public ResponseEntity<String> postComment(
       @Parameter(in = ParameterIn.HEADER, name = HEADER_API, required = true) @RequestHeader Map<String, String> headers,
       @RequestBody(description = "Comment to add", required = true, content = @Content(schema = @Schema(implementation = Comments.class))) @org.springframework.web.bind.annotation.RequestBody Comments comments) {
     String apikey = getApiKey(headers);
     Mono<Comments> monoResponse = client.post()
-          .header(HEADER_API, apikey)
-          .body(BodyInserters.fromValue(comments.toMap()))
-          .exchangeToMono(response -> {
-            if (response.statusCode().equals(HttpStatus.CREATED)) {
-              return response.bodyToMono(Comments.class);
-            } else {
-              return Mono.just(null);
-            }
-          });
-      
+        .header(HEADER_API, apikey)
+        .body(BodyInserters.fromValue(comments.toMap()))
+        .exchangeToMono(response -> {
+          if (response.statusCode().equals(HttpStatus.CREATED)) {
+            return response.bodyToMono(Comments.class);
+          } else {
+            return Mono.just(null);
+          }
+        });
+
     ResponseEntity<String> response;
     try {
       monoResponse.block();
